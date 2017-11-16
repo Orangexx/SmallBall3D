@@ -11,7 +11,7 @@ public class Network : MonoBehaviour {
 
 
     //private Player mPlayer;
-    private bool _connected = false;
+    private bool _connected = false;//啦啦
     private bool _isServer = false;
     private string _ip = "192.168.1.100";
     private int _port = 18000;
