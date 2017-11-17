@@ -14,11 +14,15 @@ public class EnemyCharacter : MonoBehaviour
     private Vector3 toMCharacter;
     public float max = 20;
 
+    private GlobalSingleton globalSigton;
+
 
     // Use this for initialization
     void Start()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
+
+        globalSigton = GlobalSingleton.GetInstance();
 
         // 获取本机玩家的对象
         mCharacter = GameObject.Find("Player").transform;
@@ -58,8 +62,11 @@ public class EnemyCharacter : MonoBehaviour
 
         if (mainManager.pauseOrOver)
             return;
-        Ai();
-        LimitVelocity(max);
+        if (globalSigton.difficulty == GlobalSingleton.Difficulty.Easy)
+            AiEasy();
+        else if (globalSigton.difficulty == GlobalSingleton.Difficulty.Hard)
+            AiHard();
+
 
     }
 
@@ -115,10 +122,20 @@ public class EnemyCharacter : MonoBehaviour
         txHP.rotation = mCharacter.rotation;
     }
 
-    private void Ai()
+    private void AiEasy()
     {
         toMCharacter = mCharacter.transform.position - this.transform.position;
         eRigbody.AddForce(toMCharacter.normalized*20, ForceMode.Force);
+        max = 20;
+        LimitVelocity(max);
+    }
+
+    private void AiHard()
+    {
+        toMCharacter = mCharacter.transform.position - this.transform.position;
+        eRigbody.AddForce(toMCharacter.normalized * 50, ForceMode.Force);
+        max = 25;
+        LimitVelocity(max);
     }
 
     private void LimitVelocity(float max)

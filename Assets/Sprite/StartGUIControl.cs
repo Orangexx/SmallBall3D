@@ -10,6 +10,7 @@ public class StartGUIControl : MonoBehaviour
     public GameObject StartImg;
     public GameObject SetImg;
     public GameObject IntImg;
+    public GameObject DifficultyImg;
     GlobalSingleton globalSigton;
 
 
@@ -26,6 +27,7 @@ public class StartGUIControl : MonoBehaviour
         IntImg.SetActive(true);
         StartImg.SetActive(false);
         SetImg.SetActive(false);
+        DifficultyImg.SetActive(false);
         globalSigton.mode = GlobalSingleton.Mode.Alone;
     }
 
@@ -34,6 +36,7 @@ public class StartGUIControl : MonoBehaviour
         IntImg.SetActive(true);
         StartImg.SetActive(false);
         SetImg.SetActive(false);
+        DifficultyImg.SetActive(false);
         globalSigton.mode = GlobalSingleton.Mode.Network;
     }
 
@@ -42,6 +45,7 @@ public class StartGUIControl : MonoBehaviour
         IntImg.SetActive(false);
         StartImg.SetActive(false);
         SetImg.SetActive(true);
+        DifficultyImg.SetActive(false);
     }
 
     public void OnButtonExit()
@@ -54,18 +58,36 @@ public class StartGUIControl : MonoBehaviour
         IntImg.SetActive(false);
         StartImg.SetActive(true);
         SetImg.SetActive(false);
+        DifficultyImg.SetActive(false);
     }
 
     public void OnButtonStart()
     {
         if (globalSigton.mode == GlobalSingleton.Mode.Alone)
-            SceneManager.LoadScene("Main");
+        {
+            IntImg.SetActive(false);
+            StartImg.SetActive(false);
+            SetImg.SetActive(false);
+            DifficultyImg.SetActive(true);
+        }
 
         else if (globalSigton.mode == GlobalSingleton.Mode.Network)
             SceneManager.LoadScene("2-Select");
 
         else
             return;
+    }
+
+    public void OnButtonEasy()
+    {
+        globalSigton.difficulty = GlobalSingleton.Difficulty.Easy;
+        SceneManager.LoadScene("Main");
+    }
+
+    public void OnButtonHard()
+    {
+        globalSigton.difficulty = GlobalSingleton.Difficulty.Hard;
+        SceneManager.LoadScene("Main");
     }
 
     public void OnInputFieldName(string str)

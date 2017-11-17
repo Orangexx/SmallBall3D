@@ -16,8 +16,14 @@ public class GlobalSingleton: XSingleton<GlobalSingleton>
         Network
     }
 
-    public Mode mode;
+    public enum Difficulty
+    {
+        Easy,
+        Hard
+    }
 
+    public Mode mode;
+    public Difficulty difficulty;
 
     private GlobalSingleton()
     {
