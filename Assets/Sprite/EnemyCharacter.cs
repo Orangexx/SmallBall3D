@@ -5,14 +5,20 @@ using UnityEngine;
 public class EnemyCharacter : MonoBehaviour
 {
 
+    [SerializeField]
+    private GameObject map;
+
+
     private MainManager mainManager;
 
     private Transform mCharacter;
     private bool isDestroy = false;
 
+    private Rigidbody pRigbody;
     private Rigidbody eRigbody;
     private Vector3 toMCharacter;
     public float max = 20;
+
 
     private GlobalSingleton globalSigton;
 
@@ -36,6 +42,7 @@ public class EnemyCharacter : MonoBehaviour
         txHPText = transform.Find("HP").GetComponent<TextMesh>();
 
         eRigbody = this.GetComponent<Rigidbody>();
+        pRigbody = mCharacter.GetComponent<Rigidbody>();
 
     }
 
@@ -65,7 +72,7 @@ public class EnemyCharacter : MonoBehaviour
         if (globalSigton.difficulty == GlobalSingleton.Difficulty.Easy)
             AiEasy();
         else if (globalSigton.difficulty == GlobalSingleton.Difficulty.Hard)
-            AiHard();
+            AiHard_2();
 
 
     }
@@ -117,7 +124,7 @@ public class EnemyCharacter : MonoBehaviour
         txIDText.text = "Name:" + _name.ToString();
         txHPText.text = "HP:" + _hp.ToString();
 
-        // 血量和ID的方向，面向着本机玩家
+        // 血量和ID的方向，面向着本机玩家UIA
         txID.rotation = mCharacter.rotation;
         txHP.rotation = mCharacter.rotation;
     }
@@ -136,6 +143,24 @@ public class EnemyCharacter : MonoBehaviour
         eRigbody.AddForce(toMCharacter.normalized * 50, ForceMode.Force);
         max = 25;
         LimitVelocity(max);
+    }
+
+    private void AiHard_2()
+    {
+        toMCharacter = mCharacter.transform.position - this.transform.position;
+        if(toMCharacter.magnitude<=6 && eRigbody.velocity.magnitude<pRigbody.velocity.magnitude)
+        {
+            eRigbody.AddForce((Vector3.Angle(transform.position, Vector3.Cross(toMCharacter, Vector3.up))<=90 ? -1 : 1) *Vector3.Cross(toMCharacter,Vector3.up) * 20, ForceMode.Force);
+            max = 25;
+        }
+        else
+        {
+            toMCharacter = mCharacter.transform.position - this.transform.position;
+            eRigbody.AddForce(toMCharacter.normalized * 10, ForceMode.Force);
+            max = 20;
+        }
+        eRigbody.velocity = Vector3.ClampMagnitude(eRigbody.velocity, max);
+        //LimitVelocity(max);
     }
 
     private void LimitVelocity(float max)
