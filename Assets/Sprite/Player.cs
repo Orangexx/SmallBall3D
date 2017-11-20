@@ -42,11 +42,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (mainManager.pauseOrOver)
-            return;
+        //if (mainManager.pauseOrOver)
+        //    return;
 
 
-        hpSlider.value = hp;
 
         //if (globalsigton.mode == GlobalSingleton.Mode.Network)
         //{
@@ -78,13 +77,15 @@ public class Player : MonoBehaviour
             rigdby.AddForce(enemyRigbody.velocity - rigdby.velocity , ForceMode.Impulse);
 
             if (enemyRigbody.velocity.magnitude >= rigdby.velocity.magnitude)
-                this.hp -= ((int)enemyRigbody.velocity.magnitude - (int)rigdby.velocity.magnitude)*3;
+                this.hp -= ((int)enemyRigbody.velocity.magnitude - (int)rigdby.velocity.magnitude)*6;
             else
-                collision.gameObject.GetComponent<EnemyCharacter>().SetHP(((int)rigdby.velocity.magnitude - (int)enemyRigbody.velocity.magnitude)*3);
+                collision.gameObject.GetComponent<EnemyCharacter>().SetHP(((int)rigdby.velocity.magnitude - (int)enemyRigbody.velocity.magnitude)*6);
 
             Debug.Log(this.hp);
             
         }
+                hpSlider.value = hp;
+
 
     }
 

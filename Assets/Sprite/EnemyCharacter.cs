@@ -156,7 +156,7 @@ public class EnemyCharacter : MonoBehaviour
         else
         {
             toMCharacter = mCharacter.transform.position - this.transform.position;
-            eRigbody.AddForce(toMCharacter.normalized * 10, ForceMode.Force);
+            eRigbody.AddForce(toMCharacter.normalized * 25, ForceMode.Force);
             max = 20;
         }
         eRigbody.velocity = Vector3.ClampMagnitude(eRigbody.velocity, max);
