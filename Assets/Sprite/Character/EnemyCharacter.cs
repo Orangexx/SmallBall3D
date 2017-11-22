@@ -4,10 +4,47 @@ using UnityEngine;
 
 public class EnemyCharacter : MonoBehaviour
 {
+    private GameObject txHP;
+    public GameObject TxHP
+    {
+        get
+        {return txHP;}
+        set
+        {txHP = value;}
+    }
 
-    [SerializeField]
-    private GameObject map;
+    private GameObject txName;
+    public GameObject TxName
+    {
+        get
+        {  return txName;}
+        set
+        { txName = value;}
+    }
 
+    private int _hp = 100;
+    public int Hp
+    {
+        get
+        {return _hp;}
+        set
+        { _hp = value;}
+    }
+
+    public string Name
+    {
+        get
+        {return _name;}
+        set
+        { _name = value;}
+    }
+
+    private string _name;
+
+    private TextMesh txNameText;
+    private TextMesh txHPText;
+
+    private Transform mCamera;
 
     private MainManager mainManager;
 
@@ -19,62 +56,52 @@ public class EnemyCharacter : MonoBehaviour
     private Vector3 toMCharacter;
     public float max = 20;
 
-
     private GlobalSingleton globalSigton;
-
 
     // Use this for initialization
     void Start()
     {
+        mCamera = GameObject.Find("Camera").transform;
+
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
 
         globalSigton = GlobalSingleton.GetInstance();
 
-        // 获取本机玩家的对象
         mCharacter = GameObject.Find("Player").transform;
-        //mCharacterComponent = mCharacter.GetComponent<Player>();
-        // 显示血量和ID的组件
 
 
-        txID = transform.Find("Name");
-        txIDText = transform.Find("Name").GetComponent<TextMesh>();
-        txHP = transform.Find("HP");
-        txHPText = transform.Find("HP").GetComponent<TextMesh>();
+        txNameText = TxName.GetComponent<TextMesh>();
+        txHPText = TxHP.GetComponent<TextMesh>();
 
         eRigbody = this.GetComponent<Rigidbody>();
         pRigbody = mCharacter.GetComponent<Rigidbody>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
-        // 更新对象属性
         UpdataProperties();
 
-
-        // 摧毁对象
         if (isDestroy)
         {
+            Destroy(txName);
+            Destroy(txHP);
             Destroy(gameObject);
         }
-
-
     }
 
     private void FixedUpdate()
     {
 
         if (mainManager.pauseOrOver)
+        {
+            eRigbody.velocity = Vector3.zero;
             return;
+        }
         if (globalSigton.difficulty == GlobalSingleton.Difficulty.Easy)
             AiEasy();
         else if (globalSigton.difficulty == GlobalSingleton.Difficulty.Hard)
             AiHard_2();
-
-
     }
 
     public void Destroy()
@@ -92,41 +119,21 @@ public class EnemyCharacter : MonoBehaviour
     }
 
 
-    // 人物变量
-    private string _name;
-    public void SetName(string name)
-    {
-        _name = name;
-    }
-
-
-    public int _hp = 100;
-    public void SetHP(int hpChanged)
-    {
-        _hp -= hpChanged;
-    }
-    public int GetHp()
-    {
-        return _hp;
-    }
-
-    private Transform txID;
-    private TextMesh txIDText;
-    private Transform txHP;
-    private TextMesh txHPText;
-    
 
     // 更新角色变量/属性
     private void UpdataProperties()
     {
 
         // 显示血量和ID
-        txIDText.text = "Name:" + _name.ToString();
-        txHPText.text = "HP:" + _hp.ToString();
+        txNameText.text = "Name:" + Name;
+        txHPText.text = "HP:" + Hp.ToString();
 
         // 血量和ID的方向，面向着本机玩家UIA
-        txID.rotation = mCharacter.rotation;
-        txHP.rotation = mCharacter.rotation;
+        TxName.transform.rotation = mCamera.rotation;
+        TxHP.transform.rotation = mCamera.rotation;
+
+        txName.transform.position = new Vector3(transform.position.x,txName.transform.position.y,transform.position.z);
+        txHP.transform.position = new Vector3(transform.position.x, txHP.transform.position.y, transform.position.z);
     }
 
     private void AiEasy()

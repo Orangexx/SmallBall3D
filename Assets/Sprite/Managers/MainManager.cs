@@ -23,6 +23,12 @@ public class MainManager : MonoBehaviour
     [SerializeField]
     private GameObject mEnemyCharacter;
 
+    [SerializeField]
+    private GameObject mEnemyHp;
+
+    [SerializeField]
+    private GameObject mEnemyName;
+
     public bool pauseOrOver;
 
     private Player host;
@@ -30,9 +36,6 @@ public class MainManager : MonoBehaviour
     private GlobalSingleton globalSington;
     private Hashtable _htEnemies = new Hashtable();
 
-
-
-    // Use this for initialization
     void Start()
     {
         pauseOrOver = false;
@@ -45,7 +48,6 @@ public class MainManager : MonoBehaviour
         host = player.GetComponent<Player>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (pauseOrOver)
@@ -58,7 +60,7 @@ public class MainManager : MonoBehaviour
             settleText.text = "Game Over";
         }
 
-        else if (enemyPlayer.GetHp() <= 0)
+        else if (enemyPlayer.Hp <= 0)
         {
             RemoveEnemyCharacter("初号球");
             pauseOrOver = true;
@@ -67,22 +69,20 @@ public class MainManager : MonoBehaviour
         }
     }
 
-
     private EnemyCharacter AddEnemyCharacter(string name)
     {
-        GameObject p = GameObject.Instantiate(mEnemyCharacter);
+        GameObject p = Instantiate(mEnemyCharacter);
         EnemyCharacter ec = p.GetComponent<EnemyCharacter>();
+        ec.TxHP = Instantiate(mEnemyHp);
+        ec.TxName = Instantiate(mEnemyName);
 
-        // 修改ID
-        ec.SetName(name);
+        ec.Name = name;
 
-        // 加入到哈希表
         _htEnemies.Add(name, ec);
 
         return ec;
     }
 
-    // 删除客户的人物模组
     private void RemoveEnemyCharacter(string id)
     {
         EnemyCharacter ec = (EnemyCharacter)_htEnemies[id];
@@ -90,7 +90,6 @@ public class MainManager : MonoBehaviour
         _htEnemies.Remove(id);
     }
 
-    // 删除所有客户的人物模组
     public void RemoveAllEnemyCharacter()
     {
         foreach (string id in _htEnemies.Keys)
