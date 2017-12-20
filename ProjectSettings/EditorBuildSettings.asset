@@ -53,7 +53,7 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: bff77b01b50254edbb6edeeaba5ae8b3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scene/2-Select.unity
     guid: 7772a3f695872b14b8d4d68dbb93e793
   - enabled: 0
